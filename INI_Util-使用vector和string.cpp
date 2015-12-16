@@ -1,5 +1,8 @@
-//#define _GNU_SOURCE
 /*
+*  配置文件读取类。 可读取.ini格式的配置文件
+*/
+/*
+//#define _GNU_SOURCE
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
@@ -11,42 +14,43 @@
 using namespace std;
 class INI_Util {
     typedef struct {
-        string key;		//�ؼ���
-        string value;	//��ֵ
+        string key;		//关键字
+        string value;	//键值
     } Record;
     typedef struct {
-        string node;		//�ڵ���
-        vector<Record> set;	//��¼����
+        string node;		//节点名
+        vector<Record> set;	//记录集合
     } Group;
     vector<Group> conf;
 
-    string defaultNode;	//Ĭ�ϲ��ҽڵ�
-    string state;		//����״̬,����ʧ���Ǵ洢ʧ��ԭ��
+    string defaultNode;	//默认查找节点
+    string state;		//搜索状态,查找失败是存储失败原因
 
 public:
+//定义一个自动访问容器中每个元素的宏，需要C++11的支持(auto)
 #define For_each(it,vec) for(auto it=vec.begin();it<vec.end();++it)
     INI_Util(const string &iniFileName) {
         loadINI(iniFileName);
         defaultNode = state = "";
     }
-
+    //载入一个ini文件
     void loadINI(const string &iniFileName);
-
+    //获取查询结果
     string getRecord(const string &key,const string node = "");
-
+    //获取查询状态
     string getState()const {
         return state;
     }
-
+    //设置默认节点
     void setDefaultNode(const string &node) {
         defaultNode = node;
     }
-
+    //获取当前默认节点
     const string& getDefaultNode()const {
         return defaultNode;
     }
-private:
-    //ȥ����β�Ŀո��\t
+public:
+    //去除字符串s首尾的空格和\t
     const static string& trim(string &s) {
         if(s.empty())
             return s;
@@ -59,7 +63,7 @@ private:
 void INI_Util::loadINI(const string &iniFileName) {
     ifstream readINI(iniFileName);
     if(readINI.is_open()) {
-        //�����ǰ����Ϣ
+        //清除以前的信息
         For_each(it,conf)
         it->set.clear();
         conf.clear();
@@ -68,7 +72,7 @@ void INI_Util::loadINI(const string &iniFileName) {
         string tmpNode = "";
         while(getline(readINI,line)) {
             trim(line);
-            if(line[0]=='[' && line[line.length()-1]==']') {
+            if(line[0]=='[' && line[line.length()-1]==']') {  //检查该行是不是声明节点
                 tmpNode = line.substr(1,line.length()-2);
                 continue;
             }
@@ -80,21 +84,14 @@ void INI_Util::loadINI(const string &iniFileName) {
             bool found = false;
             For_each(it,conf) {
                 if(it->node == tmpNode) {
-                    it->set.push_back((Record) {
-                        trim(tmpKey),trim(tmpValue)
-                    });
+                    it->set.push_back((Record) { trim(tmpKey),trim(tmpValue) });
                     found = true;
                     break;
                 }
             }
-            if(!found) {
-                //��ǰ������û�д洢����
-                conf.push_back((Group) {
-                    tmpNode,vector<Record>()
-                });
-                conf.rbegin()->set.push_back((Record) {
-                    tmpKey,tmpValue
-                });
+            if(!found) {    //当前数据集没有存储该节点，先创建该节点，再插入新键值对
+                conf.push_back((Group){ tmpNode,vector<Record>() });
+                conf.rbegin()->set.push_back((Record){ tmpKey,tmpValue });
             }
         }
         readINI.close();
@@ -125,6 +122,7 @@ string INI_Util::getRecord(const string &key,const string node) {
     return "";
 }
 
+//测试运行部分
 #include <ctime>
 int main() {
     int start = clock();
@@ -132,7 +130,7 @@ int main() {
     cout<<clock()-start<<endl;
 
     ini.setDefaultNode("MyCNN");
-    for(int i=0; i<10000; ++i) {	//Windows ��40ms
+    for(int i=0; i<10000; ++i) {	//Windows ：40ms
         string find = ini.getRecord("key_name");
         ini.getRecord(find);
         //cout<<find<<" = "<<ini.getRecord(find)<<endl;
