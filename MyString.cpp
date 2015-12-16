@@ -13,11 +13,11 @@ public:
 	}
 	MyString(const char *p){
 		int i=-1;
-		while(p[++i]);				//判断数组长度
+		while(p[++i]);		//判断数组长度
 		len=i;
 		s=new char[len+1];
 		i=0;
-		while(s[i]=p[i++]);			//将每个元素复制
+		while(s[i]=p[i++]);		//将每个元素复制
 	}
 	MyString(const MyString& str){
 		s=new char[str.len+1];
