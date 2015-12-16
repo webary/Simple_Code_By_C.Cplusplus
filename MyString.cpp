@@ -13,11 +13,11 @@ public:
 	}
 	MyString(const char *p){
 		int i=-1;
-		while(p[++i]);				//ÅĞ¶ÏÊı×é³¤¶È
+		while(p[++i]);				//åˆ¤æ–­æ•°ç»„é•¿åº¦
 		len=i;
 		s=new char[len+1];
 		i=0;
-		while(s[i]=p[i++]);			//½«Ã¿¸öÔªËØ¸´ÖÆ
+		while(s[i]=p[i++]);			//å°†æ¯ä¸ªå…ƒç´ å¤åˆ¶
 	}
 	MyString(const MyString& str){
 		s=new char[str.len+1];
@@ -49,7 +49,7 @@ public:
 		return s3;
 	}
 	MyString& operator=(const MyString& s2){
-		if(this==&s2)			//×Ô¸³Öµ¼ì²â
+		if(this==&s2)			//è‡ªèµ‹å€¼æ£€æµ‹
 			return *this;
 		if(s!=NULL)
 			delete[] s;
@@ -59,8 +59,8 @@ public:
 		while(s[i]=s2.s[i++]);
 		return *this;
 	}
-	MyString& operator+=(const MyString& s2){			//ÓĞÎÊÌâ
-		MyString s3(*this);    //s3ÏÈ±£´æ*this
+	MyString& operator+=(const MyString& s2){	//æµ‹è¯•ä¸­
+		MyString s3(*this);    //s3å…ˆä¿å­˜*this
 		delete[] s;
 		len = s2.len + s3.len;
 		s = new char[len+1];
@@ -80,15 +80,16 @@ public:
 		assert(i<len);
 		return this->s[i];
 	}
-	friend ostream& operator<<(ostream &out,const MyString& str){
-		out<<str.s;
-		return out;
-	}
-	 bool operator==(const MyString& str2){
+	bool operator==(const MyString& str2){
 		unsigned i=0;
 		while(s[i]!=NULL && s[i]==str2.s[i])
 			++i;
 		return s[i]==NULL && str2.s[i]==NULL;
+	}
+	//å®šä¹‰å‹å…ƒå‡½æ•°ï¼Œå¯ä»¥ç›´æ¥ä½¿ç”¨cin<<è¿›è¡Œè¾“å‡º
+	friend ostream& operator<<(ostream &out,const MyString& str){
+		out<<str.s;
+		return out;
 	}
 };
 
@@ -110,4 +111,3 @@ int main()
 	cout<<(str1==str[2])<<endl;
 	return 0;
 }
-
