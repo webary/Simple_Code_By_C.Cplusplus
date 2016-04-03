@@ -44,8 +44,8 @@ struct C {
  * 2.结构体的起始字节位置必须是该结构体中所占字节数最大的变量的字节数的整数倍
  * 3.最终所占字节数必须是最大所占字节数最大的变量的字节数的整数倍。
 */
-
-#pragma pack(4)//设定为4字节对齐
+#pragma pack(push)  //保存对齐状态
+#pragma pack(4)     //设定为4字节对齐
 struct Test {
     char a;
     char b;
@@ -55,6 +55,7 @@ struct Test {
     short f;
     long long g;
 };
+#pragma pack(pop)  //恢复对齐状态
 /**
  * 强制对齐前：
     01      8       16  20  24
