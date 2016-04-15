@@ -1,8 +1,9 @@
-#include <fstream>
 #include <iostream>
+#include <fstream>
 #include <iomanip>
 #include <string>
 #include <vector>
+#include <algorithm>
 #include <unordered_map>
 #include <ctime>     //clock()
 #include <windows.h> //system(),DeleteFile()
@@ -16,6 +17,7 @@ vector<string> getDirFileList(const string& dir)
     vector<string> res;
     string fileName;
     ifstream fin("filelist");
+
     while (getline(fin, fileName)) { //get one line (a file name with path)
         string::size_type pos = fileName.rfind('.'); //find the last char '.'
         if (pos != string::npos) {
@@ -24,6 +26,7 @@ vector<string> getDirFileList(const string& dir)
                 res.push_back(fileName);
         }
     }
+
     fin.close();
     DeleteFile("filelist");
     cout << "\r\t\t\t\t\t\t\r";
@@ -44,6 +47,7 @@ int getFileLine(string fName, pair<int, int>& lines)
     while (getline(fin, str)) {  //read a line every time, stastic the lines
         if (str.find_first_not_of(" \t") == str.npos) //check if is a space line
             ++cnt_space;
+
         ++cnt;
     }
     fin.close();
@@ -51,6 +55,11 @@ int getFileLine(string fName, pair<int, int>& lines)
          << " space lines, left " << cnt - cnt_space << "\n\n";
     lines = make_pair(cnt, cnt_space);
     return 1;
+}
+
+int cmp(const pair<string, int>& x, const pair<string, int>& y)
+{
+    return x.first < y.first;
 }
 
 int main(int argc, char *argv[])
@@ -61,14 +70,18 @@ int main(int argc, char *argv[])
         cin.get();
         return 0;
     }
-    int sum = 0, sum_space = 0; //total lines, total space lines
-    int fileNums = 0; //the number of file
+
+    int sum = 0;       //total lines
+    int sum_space = 0; //total space lines
+    int fileNums = 0;  //the number of file
     unordered_map<string, int> folderLines;
+
     for (int i = 1; i < argc; ++i) {
         string fName = argv[i];
         pair<int, int> lines;
         vector<string> fileList;
         string::size_type pos = fName.rfind('.'); //find the last char '.'
+
         if (pos != string::npos) { //if there is a '.' in the path name
             string fmt = fName.substr(pos); //get file format or ...
             if (fmt == ".cpp" || fmt == ".h" || fmt == ".hpp" || fmt == ".c")
@@ -77,6 +90,7 @@ int main(int argc, char *argv[])
                 fileList = getDirFileList(fName);
         } else
             fileList = getDirFileList(fName);
+
         for (auto &elem : fileList) { //deal with each file from the file list
             if (getFileLine(elem, lines)) {
                 ++fileNums;
@@ -86,10 +100,19 @@ int main(int argc, char *argv[])
             }
         }
     }
+
     cout << "\n" << fileNums << " files total: " << sum << " lines!\n"
          << sum_space << " space lines, left " << sum - sum_space << " lines\n";
-    for (auto &folder : folderLines) //output code lines of each folder
+
+    vector<pair<string, int> > sortVec;
+    sortVec.reserve(folderLines.size());
+    for (auto &folder : folderLines)
+        sortVec.push_back(folder);
+    sort(sortVec.begin(), sortVec.end(), cmp); //sort by path name
+
+    for (auto &folder : sortVec) //output code lines of each folder
         cout << setw(6) << folder.second << ": [" << folder.first << "]" << endl;
+
     cout << "\ntime cost: " << clock() / 1000.0 << " s" << endl;
     cin.get();
     return 0;
