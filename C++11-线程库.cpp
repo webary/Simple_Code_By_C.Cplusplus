@@ -24,7 +24,7 @@ int main2()
 #include <mutex>
 using namespace std;
 
-void mbox(const char* msg, const char* caption)
+void mbox(const char* msg, const char* caption = "温馨提示")
 {
     MessageBox(0, msg, caption, 0);
 }
