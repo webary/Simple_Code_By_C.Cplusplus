@@ -1,54 +1,55 @@
-#include<iostream>
-#include<string>
-#include <ctype.h>
+#include <iostream>
+#include <string>
+#include <cctype>  //isalpha
 using namespace std;
 
-int numOfWord(string &s){
-	bool flag=false;
-	unsigned len=s.length(), num=0;
-	for(int i=0;i<len;i++){
-	//	if(s[i]>='a' && s[i]<='z' || s[i]>='A' && s[i]<='Z'){
-		if(isalpha(s[i])){
-			if(flag==false){
-				flag=true;  num++;
-			}
-		}
-		else	flag=false;
-	}
-	return num;
+int numOfWord(const string &str)
+{
+    unsigned len = str.length(), num = 0;
+    for (int i = 0; i < len; i++) {
+        if (isalpha(str[i]))
+            ++num;
+        else
+            return num;
+    }
+    return num;
 }
-int longestWord(string &s,int &maxNum){
-	bool flag=false; maxNum=0;
-	int len=s.length(), max_i=0, templong, temp_i;
-	for(int i=0;i<=len;i++){			//×¢ÒâÒªĞ´×÷i<=len£¬ÈôÎªi<len»áÂÔ¹ı×îºóÒ»¸öµ¥´Ê
-		if(isalpha(s[i])){
-			if(!flag){
-				flag=true;  templong=1;  temp_i=i;
-			}
-			else	templong++;
-		}
-		else if(flag){
-			flag=false;//cout<<templong<<' ';
-			if(templong > maxNum){
-				maxNum=templong;
-				max_i=temp_i;
-			}
-		}
-	}
-	return max_i;
+int longestWord(const string &str, int &maxLength)
+{
+    bool firstLetter = false; //æ˜¯å¦æ˜¯é¦–å­—æ¯
+    maxLength = 0;
+    int len = str.length(), max_i = 0, tempLength, temp_i;
+    for (int i = 0; i <= len; i++) { //æ³¨æ„æ˜¯i<=len,è‹¥å†™ä½œi<lenä¼šç•¥è¿‡æœ€åä¸€ä¸ªå•è¯
+        if (isalpha(str[i])) {
+            if (!firstLetter) {
+                firstLetter = true;
+                tempLength = 1;
+                temp_i = i;
+            } else
+                ++tempLength;
+        } else if (firstLetter) {
+            firstLetter = false;
+            if (tempLength > maxLength) {
+                maxLength = tempLength;
+                max_i = temp_i;
+            }
+        }
+    }
+    return max_i;
 }
 int main()
 {
-	string s;
-	cout<<"please input a string :";
-	getline(cin,s);
-	int num=numOfWord(s),maxNum;
-	cout<<"\nstring \""<<s<<"\" has "<<num<<" words"<<endl;
-	int max_i=longestWord(s,maxNum);
-	cout<<"The longest word is £º";
-	char * p=&s[max_i];
-	for(int i=0;i<maxNum;p++,i++)
-		cout<<*p;
-	cout<<endl;
-	return 0;
+    cout << "please input a string :";
+    string s;
+    getline(cin, s);
+    int wordNums = numOfWord(s), maxLength;
+    cout << "\nstring \"" << s << "\" has " << wordNums << " words" << endl;
+
+    int max_i = longestWord(s, maxLength);
+
+    cout << "The longest word has " << maxLength << " charactor, which is: ";
+    for (int i = 0; i < maxLength; i++)
+        cout << s[i + max_i];
+    cout << endl;
+    return 0;
 }
