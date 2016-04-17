@@ -13,11 +13,11 @@ vector<string> getDirFileList(const string& dir)
 {
     cout << "reading file list from dir...";
     string cmd = "dir /S /B /O:N /A:-D \"" + dir + "\" >filelist";
-    system(cmd.c_str()); //list all files of the dir to 'filelist'
+    system(cmd.c_str()); //list all files of the folder to 'filelist'
     vector<string> res;
     string fileName;
-    ifstream fin("filelist");
 
+    ifstream fin("filelist");
     while (getline(fin, fileName)) { //get one line (a file name with path)
         string::size_type pos = fileName.rfind('.'); //find the last char '.'
         if (pos != string::npos) {
@@ -26,21 +26,22 @@ vector<string> getDirFileList(const string& dir)
                 res.push_back(fileName);
         }
     }
-
     fin.close();
+
     DeleteFile("filelist");
     cout << "\r\t\t\t\t\t\t\r";
     return res;
 }
 
-int getFileLine(string fName, pair<int, int>& lines)
+bool getFileLine(string fName, pair<int, int>& lines)
 {
     string::size_type pos = fName.rfind('.'); //find the last char '.'
     if (pos == string::npos) //ignore files with no file format
-        return 0;
+        return false;
     string fmt = fName.substr(pos); //get file format
     if (fmt != ".cpp" && fmt != ".h" && fmt != ".hpp" && fmt != ".c")
-        return 0;
+        return false;
+
     ifstream fin(fName.c_str()); //open the file to read the content
     int cnt = 0, cnt_space = 0;  //file lines, space lines
     string str;
@@ -51,15 +52,23 @@ int getFileLine(string fName, pair<int, int>& lines)
         ++cnt;
     }
     fin.close();
+
     cout << "file<" << fName << ">:\n" << cnt << " lines, " << cnt_space
          << " space lines, left " << cnt - cnt_space << "\n\n";
+    clog << "file<" << fName << ">:\n" << cnt << " lines, " << cnt_space
+         << " space lines, left " << cnt - cnt_space << "\n\n";
     lines = make_pair(cnt, cnt_space);
-    return 1;
+    return true;
 }
 
-int cmp(const pair<string, int>& x, const pair<string, int>& y)
+int cmpFirst(const pair<string, int>& x, const pair<string, int>& y)
 {
     return x.first < y.first;
+}
+
+int cmpSecond(const pair<string, int>& x, const pair<string, int>& y)
+{
+    return x.second > y.second;
 }
 
 int main(int argc, char *argv[])
@@ -70,6 +79,9 @@ int main(int argc, char *argv[])
         cin.get();
         return 0;
     }
+
+    ofstream logFile("log.log");
+    streambuf *sb_log = clog.rdbuf(logFile.rdbuf()); //redirect log output to file
 
     int sum = 0;       //total lines
     int sum_space = 0; //total space lines
@@ -103,17 +115,35 @@ int main(int argc, char *argv[])
 
     cout << "\n" << fileNums << " files total: " << sum << " lines!\n"
          << sum_space << " space lines, left " << sum - sum_space << " lines\n";
+    clog << "\n" << fileNums << " files total: " << sum << " lines!\n"
+         << sum_space << " space lines, left " << sum - sum_space << " lines\n";
 
     vector<pair<string, int> > sortVec;
     sortVec.reserve(folderLines.size());
     for (auto &folder : folderLines)
         sortVec.push_back(folder);
-    sort(sortVec.begin(), sortVec.end(), cmp); //sort by path name
 
-    for (auto &folder : sortVec) //output code lines of each folder
+    sort(sortVec.begin(), sortVec.end(), cmpFirst); //sort by path name asc
+
+    cout << "sort by path name asc:" << endl;
+    clog << "sort by path name asc:" << endl;
+    for (auto &folder : sortVec) { //output code lines of each folder
         cout << setw(6) << folder.second << ": [" << folder.first << "]" << endl;
+        clog << setw(6) << folder.second << ": [" << folder.first << "]" << endl;
+    }
+
+    sort(sortVec.begin(), sortVec.end(), cmpSecond); //sort by code lines desc
+
+    cout << "\nsort by code lines desc:" << endl;
+    clog << "\nsort by code lines desc:" << endl;
+    for (auto &folder : sortVec) { //output code lines of each folder
+        cout << setw(6) << folder.second << ": [" << folder.first << "]" << endl;
+        clog << setw(6) << folder.second << ": [" << folder.first << "]" << endl;
+    }
 
     cout << "\ntime cost: " << clock() / 1000.0 << " s" << endl;
+
+    clog.rdbuf(sb_log); //restore log output
     cin.get();
     return 0;
 }
