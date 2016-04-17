@@ -67,3 +67,22 @@ int main()
     cout << "Final value of n is " << n << endl;
     return 0;
 }
+
+//示例3，用自定义类再次封装thread类，实现自动在析构的时候调用join()
+class MyThread : public thread {
+public:
+    explicit MyThread()
+    {
+    }
+    template<typename _Callable, typename... _Args>
+    explicit MyThread(_Callable&& __f, _Args&&... __args)
+        : thread(__f, __args...)
+    {
+    }
+    ~MyThread()
+    {
+        if(joinable())
+            join();
+    }
+};
+MyThread tt(hello, "global ");
