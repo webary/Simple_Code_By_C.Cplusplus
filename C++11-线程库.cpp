@@ -24,9 +24,9 @@ int main2()
 #include <mutex>
 using namespace std;
 
-void mbox(string msg, string caption = "温馨提示")
+void mbox(const char* msg, const char* caption)
 {
-    MessageBox(0, msg.c_str(), caption.c_str(), 0);
+    MessageBox(0, msg, caption, 0);
 }
 
 void f1(int n, mutex &mtx_cout, volatile bool& stop)
@@ -37,7 +37,7 @@ void f1(int n, mutex &mtx_cout, volatile bool& stop)
         mtx_cout.unlock();
         this_thread::sleep_for(chrono::milliseconds(10));
     }
-    thread *t = new thread(mbox, "线程1执行中，等待结束...", "caption");
+    thread *t = new thread(mbox, "线程1执行中，等待结束...", "温馨提示");
     while(!stop)
         this_thread::sleep_for(chrono::milliseconds(10));
 }
