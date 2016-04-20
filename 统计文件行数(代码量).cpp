@@ -63,16 +63,6 @@ bool getFileLine(string fName, pair<int, int>& lines)
     return true;
 }
 
-int cmpFirst(const pair_str_int& x, const pair_str_int& y)
-{
-    return x.first < y.first;
-}
-
-int cmpSecond(const pair_str_int& x, const pair_str_int& y)
-{
-    return x.second > y.second;
-}
-
 int main(int argc, char *argv[])
 {
     if (argc < 2) { //have no command parameters with file names or paths
@@ -122,25 +112,31 @@ int main(int argc, char *argv[])
 
     cout << "\nstatistic each folder:" << endl;
     clog << "\nstatistic each folder:" << endl;
-    vector<pair_str_int> sortVec;
-    sortVec.reserve(folderLines.size());
+    vector<pair_str_int> vec;
+    vec.reserve(folderLines.size());
     for (auto &folder : folderLines)
-        sortVec.push_back(folder);
+        vec.push_back(folder);
 
-    sort(sortVec.begin(), sortVec.end(), cmpFirst); //sort by path name asc
+    //sort by path name asc, set sort rule by lamda expression
+    sort(vec.begin(), vec.end(), [](pair_str_int & x, pair_str_int & y) {
+        return x.first < y.first;
+    });
 
     cout << "sort by path name asc:" << endl;
     clog << "sort by path name asc:" << endl;
-    for (auto &folder : sortVec) { //output code lines of each folder
+    for (auto &folder : vec) { //output code lines of each folder
         cout << setw(6) << folder.second << ": [" << folder.first << "]" << endl;
         clog << setw(6) << folder.second << ": [" << folder.first << "]" << endl;
     }
 
-    sort(sortVec.begin(), sortVec.end(), cmpSecond); //sort by code lines desc
+    //sort by code lines desc, set sort rule by lamda expression
+    sort(vec.begin(), vec.end(),  [](pair_str_int & x, pair_str_int & y) {
+        return x.second > y.second;
+    });
 
     cout << "\nsort by code lines desc:" << endl;
     clog << "\nsort by code lines desc:" << endl;
-    for (auto &folder : sortVec) { //output code lines of each folder
+    for (auto &folder : vec) { //output code lines of each folder
         cout << setw(6) << folder.second << ": [" << folder.first << "]" << endl;
         clog << setw(6) << folder.second << ": [" << folder.first << "]" << endl;
     }
