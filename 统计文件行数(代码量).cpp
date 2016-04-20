@@ -9,6 +9,8 @@
 #include <windows.h> //system(),DeleteFile()
 using namespace std;
 
+typedef pair<string, int> pair_str_int;
+
 vector<string> getDirFileList(const string& dir)
 {
     cout << "reading file list from dir...";
@@ -61,12 +63,12 @@ bool getFileLine(string fName, pair<int, int>& lines)
     return true;
 }
 
-int cmpFirst(const pair<string, int>& x, const pair<string, int>& y)
+int cmpFirst(const pair_str_int& x, const pair_str_int& y)
 {
     return x.first < y.first;
 }
 
-int cmpSecond(const pair<string, int>& x, const pair<string, int>& y)
+int cmpSecond(const pair_str_int& x, const pair_str_int& y)
 {
     return x.second > y.second;
 }
@@ -118,7 +120,9 @@ int main(int argc, char *argv[])
     clog << "\n" << fileNums << " files total: " << sum << " lines!\n"
          << sum_space << " space lines, left " << sum - sum_space << " lines\n";
 
-    vector<pair<string, int> > sortVec;
+    cout << "\nstatistic each folder:" << endl;
+    clog << "\nstatistic each folder:" << endl;
+    vector<pair_str_int> sortVec;
     sortVec.reserve(folderLines.size());
     for (auto &folder : folderLines)
         sortVec.push_back(folder);
