@@ -33,7 +33,7 @@ void f1(int n, mutex &mtx_cout, volatile bool& stop)
 {
     for (int i = 0; i < 5; ++i) {
         mtx_cout.lock();
-        cout << "Thread " << n << " executing" << endl;
+        cout << "Thread " << n << " executing" << endl;//这里的输出n没能读取f2修改后n的值啊
         mtx_cout.unlock();
         this_thread::sleep_for(chrono::milliseconds(10));
     }
