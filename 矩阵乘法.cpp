@@ -2,7 +2,7 @@
 #include <ctime>
 using namespace std;
 
-//m*n ºÍ n*p µÄ¾ØÕóÏà³ËµÃµ½ m*p µÄ¾ØÕó
+//m*n å’Œ n*p çš„çŸ©é˜µç›¸ä¹˜å¾—åˆ° m*p çš„çŸ©é˜µ
 template<int m, int n, int p>
 void matMultiply(int (&a)[m][n], int (&b)[n][p], int (&c)[m][p])
 {
@@ -13,18 +13,18 @@ void matMultiply(int (&a)[m][n], int (&b)[n][p], int (&c)[m][p])
                 c[i][j] += a[i][k] * b[k][j];
         }
 }
-//ÀûÓÃ¾Ö²¿ĞÔÔ­ÀíÓÅ»¯ºóµÄÊµÏÖ´úÂë
+//åˆ©ç”¨å±€éƒ¨æ€§åŸç†ä¼˜åŒ–åçš„å®ç°ä»£ç 
 template<int m, int n, int p>
 void matMultiply2(int (&a)[m][n], int (&b)[n][p], int (&c)[m][p])
 {
-    std::fill(&c[0][0], &c[m - 1][p], 0);
+    std::fill(&c[0][0], &c[m - 1][p], 0); //å…¨éƒ¨å¡«å……ä¸º0
     for (int i = 0; i < m; ++i)
         for (int k = 0; k < n; ++k)
             for (int j = 0; j < p; ++j)
                 c[i][j] += a[i][k] * b[k][j];
 }
 
-//¶ÔÓï¾ä¿é½øĞĞ¼ÆÊ±Í³¼Æ
+//å¯¹è¯­å¥å—è¿›è¡Œè®¡æ—¶ç»Ÿè®¡
 #define tip() _tip(__LINE__)
 inline void _tip(int line)
 {
@@ -35,7 +35,7 @@ inline void _tip(int line)
     t1 = clock();
 }
 
-//¶Ôº¯Êı½øĞĞ¼ÆÊ±Í³¼Æ
+//å¯¹å‡½æ•°è¿›è¡Œè®¡æ—¶ç»Ÿè®¡
 #define tipFunc(func) \
 { \
     cout << "--L:" << __LINE__; \
@@ -44,7 +44,7 @@ inline void _tip(int line)
     cout << '\t' << clock() - t1 << "ms\t" << #func << endl; \
 }
 
-//Êı×é½Ï´ó,ĞèÒªÉèÖÃÎªÈ«¾ÖµÄ
+//æ•°ç»„è¾ƒå¤§,éœ€è¦è®¾ç½®ä¸ºå…¨å±€çš„
 const int m = 500, n = 700, p = 900;
 int a[m][n] = {
     {1, 0, 0, 2},
