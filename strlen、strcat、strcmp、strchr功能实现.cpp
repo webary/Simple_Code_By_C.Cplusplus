@@ -1,8 +1,8 @@
 /**
- ÒªÇó£º²»Ê¹ÓÃ×Ö·û´®´¦Àí¿âº¯ÊıÊµÏÖstrlen¡¢strcpy¡¢strcat¡¢strcmpµÄ¹¦ÄÜ
+ è¦æ±‚ï¼šä¸ä½¿ç”¨å­—ç¬¦ä¸²å¤„ç†åº“å‡½æ•°,è‡ªå·±åŠ¨æ‰‹å®ç°strlenã€strcpyã€strcatã€strcmpã€strchrçš„åŠŸèƒ½
  **/
 #include<stdio.h>
-//Çó×Ö·û´®µÄ³¤¶È
+//æ±‚å­—ç¬¦ä¸²çš„é•¿åº¦
 unsigned strlen(const char* src)
 {
     if(src==0 || *src=='\0')
@@ -13,9 +13,9 @@ unsigned strlen(const char* src)
     return ptr - src;
 }
 
-//strcpy¼ûµ¥¶ÀÎÄ¼ş
+//strcpyè§å•ç‹¬æ–‡ä»¶
 
-//Á¬½ÓÁ½¸ö×Ö·û´®
+//è¿æ¥ä¸¤ä¸ªå­—ç¬¦ä¸²
 char* strcat ( char * dst , const char * src )
 {
     if(dst==0 || src==0)
@@ -27,9 +27,9 @@ char* strcat ( char * dst , const char * src )
         ;
     return pszOrigDst;
 }
-/*Èç¹ûdest > source,Ôò·µ»ØÖµ´óÓÚ0£¬
-  Èç¹ûdest = source,Ôò·µ»ØÖµµÈÓÚ0£¬
-  Èç¹ûdest < source,Ôò·µ»ØÖµĞ¡ÓÚ0¡£*/
+/*å¦‚æœdest > source,åˆ™è¿”å›å€¼å¤§äº0ï¼Œ
+  å¦‚æœdest = source,åˆ™è¿”å›å€¼ç­‰äº0ï¼Œ
+  å¦‚æœdest < source,åˆ™è¿”å›å€¼å°äº0ã€‚*/
 int strcmp(const char *dst, const char *src)
 {
     if(NULL==dst || NULL==src)
@@ -40,7 +40,7 @@ int strcmp(const char *dst, const char *src)
     }
     return *dst - *src;
 }
-//ÔÚ×Ö·û´®srcÖĞÕÒµ½µÚÒ»¸öcµÄÎ»ÖÃ²¢·µ»Ø
+//åœ¨å­—ç¬¦ä¸²srcä¸­æ‰¾åˆ°ç¬¬ä¸€ä¸ªcçš„ä½ç½®å¹¶è¿”å›
 const char* strchr(const char* src,char c)
 {
     if(src==0 || c=='\0')
@@ -50,7 +50,7 @@ const char* strchr(const char* src,char c)
             return src;
         ++src;
     }
-    return 0; //Ã»ÓĞÕÒµ½¸Ã×Ö·û
+    return 0; //æ²¡æœ‰æ‰¾åˆ°è¯¥å­—ç¬¦
 }
 
 int main()
