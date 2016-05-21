@@ -1,9 +1,9 @@
 /**
- 下面是一个利用共有内存实现进程之间的数据共享的Sample程序。
+ 下面是一个利用共享内存实现进程之间的数据共享(通信)的例程。
  **/
 //读内存程序
-#include "windows.h"
-#include "iostream"
+#include <windows.h>
+#include <iostream>
 using namespace std;
 
 int openMyFileMap(void* &lp,size_t size,const char* str)
