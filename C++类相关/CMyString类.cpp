@@ -22,7 +22,7 @@ public:
     inline friend bool operator==(const CMyString& obj1, const CMyString& obj2);
     //define a friend function to support operator<< for output directly
     inline friend ostream& operator<<(ostream &out, const CMyString& obj);
-    //define a friend function to support operator>> for output directly
+    //define a friend function to support operator>> for input directly
     inline friend istream& operator>>(istream &in, CMyString& obj);
 private:
     char* m_pData;
