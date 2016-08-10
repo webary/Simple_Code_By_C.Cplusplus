@@ -29,6 +29,10 @@ int main()
     for (; set_iter1 != positive_num.end(); ++set_iter1)
         cout << *set_iter1 << " ";
     cout << endl;
+    //当然，还可以完全使用C++11来遍历
+    for(auto &elem : positive_num)
+        cout << elem << " ";
+    cout << endl;
     //另外一种比较精巧的遍历输出方式，需要头文件<iterator>
     copy(positive_num.begin(), positive_num.end(), ostream_iterator<int>(cout, " "));
     cout << endl;
